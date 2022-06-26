@@ -46,7 +46,7 @@ public class ParkingPlaceControllerTest {
     public void addParkingPlaceFailureTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/parking-lot-reservation/parkingPlace/{quantity}","-10")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -56,7 +56,7 @@ public class ParkingPlaceControllerTest {
     public void removeParkingPlaceSuccessTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/parking-lot-reservation/parkingPlace/{quantity}","10")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

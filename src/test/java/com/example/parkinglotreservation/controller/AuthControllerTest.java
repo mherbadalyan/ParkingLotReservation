@@ -71,7 +71,7 @@ public class AuthControllerTest {
         String userJson = mapper.writeValueAsString(signUpDto);
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/auth/sign-up")
-                                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                .contentType(MediaType.APPLICATION_JSON)
                                 .content(userJson.getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
@@ -91,7 +91,7 @@ public class AuthControllerTest {
         String userJson = mapper.writeValueAsString(signUpDto);
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/auth/sign-up")
-                                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                                .contentType(MediaType.APPLICATION_JSON)
                                 .content(userJson.getBytes()))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print());

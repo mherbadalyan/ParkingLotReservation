@@ -43,7 +43,7 @@ public class ResidentControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/parking-lot-reservation/resident/{phone}", "5555")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -54,7 +54,7 @@ public class ResidentControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/parking-lot-reservation/resident/{phone}/{money}", "5555",100)
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -70,9 +70,9 @@ public class ResidentControllerTest {
         String userJson = mapper.writeValueAsString(dto);
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/parking-lot-reservation/resident/{phone}", "555")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson.getBytes()))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -82,7 +82,7 @@ public class ResidentControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/parking-lot-reservation/resident/{phone}", "5555")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

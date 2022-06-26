@@ -39,7 +39,7 @@ public class BookControllerTest {
     public void bookSuccessTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/parking-lot-reservation/book/{car-number}","97xx997")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -49,8 +49,8 @@ public class BookControllerTest {
     public void removeBookFailureTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/parking-lot-reservation/book/{id}","3")
-                        .contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
 
