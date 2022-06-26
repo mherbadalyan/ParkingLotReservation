@@ -35,9 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/auth/sign-in/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/auth/sign-up/**").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/parking-lot-reservation/resident/{phone}/{money}/**").permitAll()
                 .antMatchers(HttpMethod.PUT,"/parking-lot-reservation/resident/{phone}/**").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/parking-lot-reservation/resident/{phone}/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.PUT,"/parking-lot-reservation/resident/{phone}/{money}/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/parking-lot-reservation/resident/**").permitAll()
                 .antMatchers("/parking-lot-reservation/parkingPlace/**").hasAuthority("ADMIN")
                 .antMatchers("/parking-lot-reservation/book/**").hasAuthority("RESIDENT")
@@ -58,5 +58,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
 }

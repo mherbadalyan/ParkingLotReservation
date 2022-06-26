@@ -1,7 +1,9 @@
 package com.example.parkinglotreservation.model.entity;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -46,13 +48,13 @@ public class Book {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id != null && Objects.equals(id, book.id);
+        return Objects.equals(id, book.id) && Objects.equals(reserveDate, book.reserveDate) && Objects.equals(carNumber, book.carNumber) && Objects.equals(bookPrice, book.bookPrice) && Objects.equals(resident, book.resident) && Objects.equals(parkingPlace, book.parkingPlace);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, reserveDate, carNumber, bookPrice, resident, parkingPlace);
     }
 }

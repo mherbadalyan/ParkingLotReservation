@@ -15,20 +15,16 @@ import java.util.List;
 @NoArgsConstructor
 public class ResidentDto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String name;
 
     private String phone;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Double account;
+    private Double debt;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<BookDto> bookList = new ArrayList<>();
 }

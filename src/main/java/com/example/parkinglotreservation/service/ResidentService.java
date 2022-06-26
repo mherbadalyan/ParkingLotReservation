@@ -1,12 +1,15 @@
 package com.example.parkinglotreservation.service;
 
-import com.example.parkinglotreservation.model.mapper.ResidentMapper;
+import com.example.parkinglotreservation.exception.exception_classes.ResidentNotFoundException;
 import com.example.parkinglotreservation.model.dto.ResidentDto;
+import com.example.parkinglotreservation.model.dto.UpdateResidentDto;
 import com.example.parkinglotreservation.model.entity.Resident;
+import com.example.parkinglotreservation.model.mapper.ResidentMapper;
 import com.example.parkinglotreservation.repository.ResidentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,23 +22,24 @@ public class ResidentService {
 
     private PasswordEncoder passwordEncoder;
 
-    public Optional<ResidentDto> getResident(String phone) {
+    public ResidentDto getResident(String phone) {
 
         Optional<Resident> residentFromData = residentRepository.findByPhone(phone);
 
         if (residentFromData.isEmpty()) {
-            return Optional.empty();
+            throw new ResidentNotFoundException(phone);
         }
 
-        return Optional.of(residentMapper.convertToDto(residentFromData.get()));
+        return residentMapper.convertToDto(residentFromData.get());
     }
 
-    public Optional<ResidentDto> updateResident(String phone, ResidentDto residentDto) {
+    @Transactional
+    public  ResidentDto updateResident(String phone, UpdateResidentDto residentDto) {
 
         Optional<Resident> residentFromData = residentRepository.findByPhone(phone);
 
         if (residentFromData.isEmpty()) {
-            return Optional.empty();
+            throw new ResidentNotFoundException(phone);
         }
 
         residentFromData.get().setPhone(residentDto.getPhone());
@@ -43,36 +47,41 @@ public class ResidentService {
 
         Resident updatedResident = residentRepository.save(residentFromData.get());
 
-        return Optional.of(residentMapper.convertToDto(updatedResident));
+        return residentMapper.convertToDto(updatedResident);
     }
+    @Transactional
+    public ResidentDto updateResidentAccount(String phone, Double cash) {
+        if (cash <= 0) {
+            throw new IllegalArgumentException("Incorrect amount of money");
+        }
 
-    public Optional<ResidentDto> updateResidentAccount(String phone, Double money) {
         Optional<Resident> residentFromData = residentRepository.findByPhone(phone);
 
         if (residentFromData.isEmpty()) {
-            return Optional.empty();
+            throw new ResidentNotFoundException(phone);
         }
 
-        Double newAccount = residentFromData.get().getAccount() - money;
+        Double newDebt = residentFromData.get().getDebt() - cash;
 
-        residentFromData.get().setAccount(newAccount);
+        residentFromData.get().setDebt(newDebt);
 
         Resident updatedResident = residentRepository.save(residentFromData.get());
 
-        return Optional.of(residentMapper.convertToDto(updatedResident));
+        return residentMapper.convertToDto(updatedResident);
     }
-
-    public Optional<ResidentDto> removeResident(String phone) {
+    @Transactional
+    public ResidentDto removeResident(String phone) {
 
         Optional<Resident> residentFromData = residentRepository.findByPhone(phone);
 
         if (residentFromData.isEmpty()) {
-            return Optional.empty();
+           throw new ResidentNotFoundException(phone);
         }
+
         ResidentDto residentDto = residentMapper.convertToDto(residentFromData.get());
 
         residentRepository.delete(residentFromData.get());
 
-        return Optional.of(residentDto);
+        return residentDto;
     }
 }

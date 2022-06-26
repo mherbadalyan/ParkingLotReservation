@@ -66,7 +66,7 @@ public class AuthController {
         Resident resident = new Resident();
         resident.setName(signUpDto.getName());
         resident.setPhone(signUpDto.getPhone());
-        resident.setAccount(0D);
+        resident.setDebt(0D);
         resident.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
         Role roles = null;

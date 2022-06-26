@@ -1,5 +1,7 @@
 package com.example.parkinglotreservation.service;
 
+import com.example.parkinglotreservation.exception.exception_classes.IncorrectQuantityOfParkingPlaceException;
+import com.example.parkinglotreservation.exception.exception_classes.ParkingLotsNotAddedException;
 import com.example.parkinglotreservation.model.entity.ParkingPlace;
 import com.example.parkinglotreservation.model.enums.Status;
 import com.example.parkinglotreservation.repository.ParkingPlaceRepository;
@@ -16,9 +18,13 @@ public class ParkingPlaceService {
 
     private final ParkingPlaceRepository parkingPlaceRepository;
 
-    public int addParkingPlace(Integer quantity) {
+    public void addParkingPlace(Integer quantity) {
         int startNum;
         Optional<ParkingPlace> lastParkingPlace = parkingPlaceRepository.findLastParkingPlace();
+
+        if (quantity <= 0) {
+            throw new IncorrectQuantityOfParkingPlaceException();
+        }
 
         if (lastParkingPlace.isEmpty()) {
             startNum = 1;
@@ -38,12 +44,15 @@ public class ParkingPlaceService {
 
         List<ParkingPlace> parkingPlaces = parkingPlaceRepository.saveAll(newList);
         if (parkingPlaces.isEmpty()) {
-            return 0;
+           throw new ParkingLotsNotAddedException();
         }
-        return 1;
     }
 
     public void removeParkingPlace(Integer quantity) {
+
+        if (quantity <= 0) {
+            throw new IncorrectQuantityOfParkingPlaceException();
+        }
 
         List<ParkingPlace> lastParkingPlace = parkingPlaceRepository.findParkingPlacesForRemove(quantity);
 

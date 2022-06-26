@@ -1,5 +1,8 @@
 package com.example.parkinglotreservation.service;
 
+import com.example.parkinglotreservation.exception.exception_classes.BookingNotFoundException;
+import com.example.parkinglotreservation.exception.exception_classes.NoAvailableParkingPlaceException;
+import com.example.parkinglotreservation.exception.exception_classes.ResidentNotFoundException;
 import com.example.parkinglotreservation.model.dto.BookDto;
 import com.example.parkinglotreservation.model.entity.Book;
 import com.example.parkinglotreservation.model.entity.ParkingPlace;
@@ -11,6 +14,7 @@ import com.example.parkinglotreservation.repository.ParkingPlaceRepository;
 import com.example.parkinglotreservation.repository.ResidentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -28,15 +32,20 @@ public class BookService {
 
     private final BookMapper bookMapper;
 
-    public Optional<BookDto> createBook(String name ,String carNumber) {
+    @Transactional
+    public BookDto createBooking(String name, String carNumber) {
 
         Optional<Resident> residentFromData = residentRepository.findByName(name);
+
+        if (residentFromData.isEmpty()) {
+            throw new ResidentNotFoundException(name);
+        }
 
         Optional<ParkingPlace> parkingPlace = parkingPlaceRepository.findFirstByStatusAvailable();
 
         if (parkingPlace.isEmpty()) {
-            return Optional.empty();
-        }else {
+            throw new NoAvailableParkingPlaceException();
+        } else {
             parkingPlace.get().setStatus(Status.RESERVED);
         }
 
@@ -49,29 +58,34 @@ public class BookService {
 
         Book savedBook = bookRepository.save(book);
 
-        return Optional.of(bookMapper.convertToDto(savedBook));
+        return bookMapper.convertToDto(savedBook);
     }
 
-    public Optional<BookDto> removeBook(String name,Long bookId) {
+    @Transactional
+    public BookDto completeBooking(String name, Long bookId) {
 
         Optional<Book> bookToRemove = bookRepository.findById(bookId);
 
-        if (bookToRemove.isEmpty() || !bookToRemove.get().getResident().getName().equals(name)) {
-            return Optional.empty();
+        if (bookToRemove.isEmpty()) {
+            throw new BookingNotFoundException("There is no booking with this id " + bookId);
+        }
+
+        if (!bookToRemove.get().getResident().getName().equals(name)) {
+            throw new BookingNotFoundException("You have not booking with this id " + bookId);
         }
 
         Period period = Period.between(bookToRemove.get().getReserveDate(), LocalDate.now());
 
         int bookDays = period.getDays() + 1;
         Double bookPrice = bookDays * 500D;
-        Double account = bookToRemove.get().getResident().getAccount();
+        Double debt = bookToRemove.get().getResident().getDebt();
 
         bookToRemove.get().getParkingPlace().setStatus(Status.AVAILABLE);
-        bookToRemove.get().getResident().setAccount(account + bookPrice);
+        bookToRemove.get().getResident().setDebt(debt + bookPrice);
 
         bookRepository.delete(bookToRemove.get());
 
         bookToRemove.get().setBookPrice(bookPrice);
-        return Optional.of(bookMapper.convertToDto(bookToRemove.get()));
+        return bookMapper.convertToDto(bookToRemove.get());
     }
 }

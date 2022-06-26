@@ -19,7 +19,7 @@ public class ResidentMapper implements BaseMapper<Resident, ResidentDto>{
         resident.setName(dto.getName());
         resident.setPassword(dto.getPassword());
         resident.setPhone(dto.getPhone());
-        resident.setAccount(dto.getAccount());
+        resident.setDebt(dto.getDebt());
         return resident;
     }
 
@@ -29,8 +29,8 @@ public class ResidentMapper implements BaseMapper<Resident, ResidentDto>{
                 id(entity.getId()).
                 name(entity.getName()).
                 phone(entity.getPhone()).
-                account(entity.getAccount()).
-                bookList((List<BookDto>) bookMapper.convertToDtoColl(entity.getBookList())).
+                debt(entity.getDebt()).
+                bookList((List<BookDto>) bookMapper.convertToDtos(entity.getBookList())).
                 build();
     }
 }

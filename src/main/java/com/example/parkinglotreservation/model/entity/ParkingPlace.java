@@ -36,6 +36,6 @@ public class ParkingPlace {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, placeNumber, status);
     }
 }
