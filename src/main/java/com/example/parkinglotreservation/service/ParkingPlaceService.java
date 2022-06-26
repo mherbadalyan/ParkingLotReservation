@@ -7,6 +7,7 @@ import com.example.parkinglotreservation.model.enums.Status;
 import com.example.parkinglotreservation.repository.ParkingPlaceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ParkingPlaceService {
 
     private final ParkingPlaceRepository parkingPlaceRepository;
 
+    @Transactional
     public void addParkingPlace(Integer quantity) {
         int startNum;
         Optional<ParkingPlace> lastParkingPlace = parkingPlaceRepository.findLastParkingPlace();
@@ -48,6 +50,7 @@ public class ParkingPlaceService {
         }
     }
 
+    @Transactional
     public void removeParkingPlace(Integer quantity) {
 
         if (quantity <= 0) {
