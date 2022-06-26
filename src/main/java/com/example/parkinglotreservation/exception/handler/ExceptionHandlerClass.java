@@ -14,15 +14,22 @@ public class ExceptionHandlerClass {
     private final Logger logger = LoggerFactory.getLogger(ExceptionHandlerClass.class);
 
     @ExceptionHandler({
-            ResidentNotFoundException.class,
-            BookingNotFoundException.class,
             IncorrectQuantityOfParkingPlaceException.class,
             IllegalArgumentException.class,
             NoAvailableParkingPlaceException.class,
             ParkingLotsNotAddedException.class})
-    public ResponseEntity<?> handleAllCustomException(RuntimeException exception) {
+    public ResponseEntity<?> handleBadRequestException(RuntimeException exception) {
         logger.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({
+            ResidentNotFoundException.class,
+            BookingNotFoundException.class})
+    public ResponseEntity<?> handleNotFoundException(RuntimeException exception) {
+        logger.warn(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(),
+                HttpStatus.NOT_FOUND);
     }
 }
