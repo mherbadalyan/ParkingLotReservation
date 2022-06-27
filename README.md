@@ -23,4 +23,8 @@ add the paid amount and the data will be reflected on the user account respectiv
   - MySQL
   - JUnit
 
+## First admin 
+   - LOGIN      - 1111
+   - PASSWORD   - 1111
+
 
